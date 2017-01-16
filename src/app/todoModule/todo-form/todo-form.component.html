@@ -1,0 +1,18 @@
+<!-- Angular creates and attaches an NgForm directive to the <form> tag automatically. -->
+<!-- The NgForm directive supplements the form element with additional features.
+It holds the controls we created for the elements with ngModel directive and name attribute
+and monitors their properties including their validity. It also has its own valid property
+which is true only if every contained control is valid. -->
+
+<form (ngSubmit)="submit( todoForm.form.value )" #todoForm="ngForm">
+  <div class="form-group">
+      <input #todoInput="ngModel" [(ngModel)]="todo" name="todo" required type="text" class="form-control" id="todoItem" placeholder="Milk cow">
+      <div [hidden]="todoInput.valid || todoInput.pristine" class="alert alert-danger">
+        <span>To do required!</span>
+      </div>
+  </div>
+
+  <button [ngStyle]="{'white-space': 'normal'}" [disabled]="!todoForm.form.valid" #todoForm.reset() type="submit" class="btn btn-primary btn-lg btn-block">
+    Create
+  </button>
+</form>
