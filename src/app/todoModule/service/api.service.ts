@@ -17,20 +17,11 @@ export class ApiService {
       .map( resp => resp.json() )
       .subscribe(
         json => {
-          this.todos = json.map( todoData => new Todo( todoData.text, todoData.isCompleted, todoData.id ) );
+          this.todos = json.map( todoData => new Todo( todoData.text, todoData.isCompleted, todoData._id ) );
           this.allTodos.next( this.todos );
         },
         console.log
       );
-  }
-
-  getTodo( id: string ) {
-    return this._http.get(`/api/todo/${id}`)
-      .map( resp => resp.json().map( todoData => new Todo( todoData ) ) )
-      .subscribe(
-        () => {},
-        console.log
-       );
   }
 
   addTodo( todo: Todo ) {
@@ -40,22 +31,36 @@ export class ApiService {
       .map( resp => resp.json() )
       .subscribe(
         ( json ) => {
-          this.todos.push( new Todo( json.text, json.isCompleted, json.id ) );
-          this.allTodos.next( this.todos );
+          this.todos.push( new Todo( json.text, json.isCompleted, json._id ) );
         },
         console.log
       );
   }
 
   updateTodo( id: string, updatedTodo ) {
+    this.isUpdatingTodo.next( true );
     let headers = new Headers();
     headers.append( 'Content-Type', 'application/json' );
     this._http.put(`/api/todo/${id}`, JSON.stringify( updatedTodo ), { headers : headers } )
-      .subscribe( console.log, ( err ) => console.log( err ) );
+      .map( resp => resp.json() )
+      .subscribe(
+        ( json ) => {
+          let todoToUpdate = this.todos.find( todo => todo.id === id )
+          Object.assign( todoToUpdate, updatedTodo );
+          this.isUpdatingTodo.next( false );
+        }, ( err ) => {
+          console.log( err );
+          this.isUpdatingTodo.next( false );
+        } );
   }
 
   deleteTodo( id: string ) {
     this._http.delete(`/api/todo/${id}`)
-      .subscribe( console.log, ( err ) => console.log( err ) );
+      .subscribe(
+        () => {
+          let index = this.todos.findIndex( todo => todo.id === id);
+          this.todos.splice(index, 1);
+        },
+        console.log );
   }
 }
