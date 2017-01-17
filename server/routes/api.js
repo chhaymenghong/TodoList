@@ -48,7 +48,7 @@ router.put( '/todo/:id', ( req, res, next ) => {
 } );
 
 // Delete a todo
-router.delete( '/todo:/id', ( req, res, next ) => {
+router.delete( '/todo/:id', ( req, res, next ) => {
   db.todos.remove(
     { _id : mongojs.ObjectId( req.params.id ) },
     '',
