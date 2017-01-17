@@ -1,2 +1,10 @@
-<span>{{todo.text}}</span>
-<span>{{todo.isCompleted}}</span>
+<div class="row">
+    <div class="col-xs-8">
+      <input class="form-control" type="text" value="{{todo.text}}">
+    </div>
+
+    <div [ngStyle]="{'white-space': 'normal'}" class="col-xs-2 col-xs-offset-2">
+      <button (click)="deleteTodo()" type="button" name="button" class="btn btn-danger btn-sm">Delete
+      </button>
+    </div>
+</div>

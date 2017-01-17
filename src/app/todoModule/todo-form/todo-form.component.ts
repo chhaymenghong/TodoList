@@ -13,8 +13,14 @@ export class TodoFormComponent implements OnInit {
   public todo: Object;
   constructor( private _apiService : ApiService ) { }
 
-  submit( controlObject ) {
-    this._apiService.addTodo( new Todo( controlObject.todo ) );
+  submit( form ) {
+    this._apiService.addTodo( new Todo( form.value.todo ) );
+
+    // rest form controls value, marked them as pristine and untouched
+    for ( let name in form.controls ) {
+      form.controls[name].reset();
+    }
+
   }
 
   ngOnInit() {
